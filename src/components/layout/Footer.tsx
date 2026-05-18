@@ -96,6 +96,33 @@ export function Footer() {
         </div>
       </div>
 
+      <div className="mx-auto mt-10 max-w-7xl">
+        <div className="overflow-hidden rounded-3xl border border-white/10 bg-white/5">
+          <iframe
+            title="Dress Me Up Boutique lokacija"
+            src="https://www.google.com/maps?q=44.53864828988611,18.655821338677246&z=17&output=embed"
+            className="h-72 w-full border-0"
+            loading="lazy"
+            referrerPolicy="no-referrer-when-downgrade"
+          />
+        </div>
+
+        <div className="mt-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <p className="text-sm text-neutral-400">
+            Lokacija: Irac, Rudarska 50, Tuzla
+          </p>
+
+          <a
+            href="https://www.google.com/maps?q=44.53864828988611,18.655821338677246"
+            target="_blank"
+            rel="noreferrer"
+            className="w-fit rounded-full border border-white/15 px-5 py-2 text-sm font-semibold text-white hover:border-white"
+          >
+            Otvori u Google Maps
+          </a>
+        </div>
+      </div>
+
       <div className="mx-auto mt-10 max-w-7xl border-t border-white/10 pt-6 text-sm text-neutral-500">
         © {new Date().getFullYear()} Dress Me Up Boutique. Demo webshop.
       </div>
