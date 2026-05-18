@@ -1,9 +1,9 @@
 ﻿import Link from "next/link";
-import { Mail, MapPin, Phone } from "lucide-react";
+import { Clock, MapPin, PackageCheck, RotateCcw } from "lucide-react";
 
 export function Footer() {
   return (
-    <footer className="border-t bg-neutral-950 px-4 py-12 text-white">
+    <footer id="contact" className="border-t bg-neutral-950 px-4 py-12 text-white">
       <div className="mx-auto grid max-w-7xl gap-10 md:grid-cols-4">
         <div className="md:col-span-2">
           <Link href="/" className="text-2xl font-semibold tracking-tight">
@@ -15,10 +15,21 @@ export function Footer() {
             za svaki dan.
           </p>
 
-          <p className="mt-4 text-sm text-neutral-400">
-            Brza posta BiH: 11,00 KM. Isporuka 1/3 radna dana. Dozvoljeno
-            otvaranje paketa.
-          </p>
+          <div className="mt-6 grid gap-3 text-sm text-neutral-300 sm:grid-cols-2">
+            <div className="rounded-2xl bg-white/5 p-4">
+              <PackageCheck className="mb-2 h-5 w-5 text-white" />
+              <p className="font-medium text-white">Brza posta BiH</p>
+              <p className="mt-1 text-neutral-400">Dostava 11,00 KM</p>
+            </div>
+
+            <div className="rounded-2xl bg-white/5 p-4">
+              <RotateCcw className="mb-2 h-5 w-5 text-white" />
+              <p className="font-medium text-white">Zamjene</p>
+              <p className="mt-1 text-neutral-400">
+                Zamjene u roku od 24h. Povrate ne radimo.
+              </p>
+            </div>
+          </div>
         </div>
 
         <div>
@@ -44,7 +55,7 @@ export function Footer() {
 
         <div>
           <h3 className="mb-4 text-sm font-semibold uppercase tracking-[0.2em]">
-            Kontakt
+            Butik
           </h3>
 
           <div className="space-y-4 text-sm text-neutral-300">
@@ -54,28 +65,39 @@ export function Footer() {
             </div>
 
             <div className="flex gap-3">
-              <Phone className="mt-0.5 h-4 w-4 shrink-0" />
-              <span>Telefon nije naveden</span>
+              <Clock className="mt-0.5 h-4 w-4 shrink-0" />
+              <span>Radno vrijeme: 10:00-18:00h</span>
             </div>
 
-            <div className="flex gap-3">
-              <Mail className="mt-0.5 h-4 w-4 shrink-0" />
-              <span>Email nije naveden</span>
-            </div>
+            <p className="text-neutral-400">
+              Isporuka 1/3 radna dana. Dozvoljeno otvaranje paketa.
+            </p>
 
-            <div className="flex gap-3">
-              <span className="mt-0.5 shrink-0">@</span>
-              <span>dressmeup_boutique_</span>
-            </div>
+            <div className="flex flex-wrap gap-2 pt-2">
+              <a
+                href="https://www.instagram.com/dressmeup_boutique_/"
+                target="_blank"
+                rel="noreferrer"
+                className="rounded-full border border-white/15 px-4 py-2 text-xs font-semibold hover:border-white hover:text-white"
+              >
+                Instagram
+              </a>
 
-            <p>Radno vrijeme: 10:00-18:00h</p>
-            <p>Zamjene u roku od 24h. Povrate ne radimo.</p>
+              <a
+                href="https://www.facebook.com/p/Dress-Me-Up-61564424618405/"
+                target="_blank"
+                rel="noreferrer"
+                className="rounded-full border border-white/15 px-4 py-2 text-xs font-semibold hover:border-white hover:text-white"
+              >
+                Facebook
+              </a>
+            </div>
           </div>
         </div>
       </div>
 
       <div className="mx-auto mt-10 max-w-7xl border-t border-white/10 pt-6 text-sm text-neutral-500">
-        © {new Date().getFullYear()} Dress Me Up Boutique. All rights reserved.
+        © {new Date().getFullYear()} Dress Me Up Boutique. Demo webshop.
       </div>
     </footer>
   );
