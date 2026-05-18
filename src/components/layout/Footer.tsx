@@ -1,5 +1,6 @@
 ﻿import Link from "next/link";
 import { Clock, MapPin, PackageCheck, RotateCcw } from "lucide-react";
+import { FaFacebookF, FaInstagram } from "react-icons/fa";
 
 export function Footer() {
   return (
@@ -78,18 +79,20 @@ export function Footer() {
                 href="https://www.instagram.com/dressmeup_boutique_/"
                 target="_blank"
                 rel="noreferrer"
-                className="rounded-full border border-white/15 px-4 py-2 text-xs font-semibold hover:border-white hover:text-white"
+                aria-label="Instagram"
+                className="flex h-10 w-10 items-center justify-center rounded-full border border-white/15 text-white hover:border-white"
               >
-                Instagram
+                <FaInstagram className="h-4 w-4" />
               </a>
 
               <a
                 href="https://www.facebook.com/p/Dress-Me-Up-61564424618405/"
                 target="_blank"
                 rel="noreferrer"
-                className="rounded-full border border-white/15 px-4 py-2 text-xs font-semibold hover:border-white hover:text-white"
+                aria-label="Facebook"
+                className="flex h-10 w-10 items-center justify-center rounded-full border border-white/15 text-white hover:border-white"
               >
-                Facebook
+                <FaFacebookF className="h-4 w-4" />
               </a>
             </div>
           </div>

@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useState } from "react";
 import { Menu, ShoppingBag, X } from "lucide-react";
+import { FaFacebookF, FaInstagram } from "react-icons/fa";
 import { Button } from "@/components/ui/button";
 
 const navigation = [
@@ -15,13 +16,13 @@ const navigation = [
 const socialLinks = [
   {
     name: "Instagram",
-    label: "IG",
     href: "https://www.instagram.com/dressmeup_boutique_/",
+    icon: FaInstagram,
   },
   {
     name: "Facebook",
-    label: "FB",
     href: "https://www.facebook.com/p/Dress-Me-Up-61564424618405/",
+    icon: FaFacebookF,
   },
 ];
 
@@ -40,9 +41,7 @@ export function Header() {
             <p className="text-xl font-semibold leading-none tracking-tight text-neutral-950">
               Dress Me Up
             </p>
-            <p className="mt-1 text-xs text-neutral-500">
-              Boutique Tuzla
-            </p>
+            <p className="mt-1 text-xs text-neutral-500">Boutique Tuzla</p>
           </div>
         </Link>
 
@@ -55,17 +54,22 @@ export function Header() {
 
           <div className="h-5 w-px bg-neutral-200" />
 
-          {socialLinks.map((item) => (
-            <a
-              key={item.name}
-              href={item.href}
-              target="_blank"
-              rel="noreferrer"
-              className="rounded-full border px-3 py-1 text-xs font-semibold text-neutral-700 hover:border-neutral-950 hover:text-neutral-950"
-            >
-              {item.label}
-            </a>
-          ))}
+          {socialLinks.map((item) => {
+            const Icon = item.icon;
+
+            return (
+              <a
+                key={item.name}
+                href={item.href}
+                target="_blank"
+                rel="noreferrer"
+                aria-label={item.name}
+                className="flex h-9 w-9 items-center justify-center rounded-full border text-neutral-700 transition hover:border-neutral-950 hover:bg-neutral-950 hover:text-white"
+              >
+                <Icon className="h-4 w-4" />
+              </a>
+            );
+          })}
         </nav>
 
         <div className="hidden items-center gap-3 md:flex">
@@ -101,17 +105,22 @@ export function Header() {
             ))}
 
             <div className="flex gap-2 pt-2">
-              {socialLinks.map((item) => (
-                <a
-                  key={item.name}
-                  href={item.href}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="rounded-full border px-4 py-2 text-sm font-semibold"
-                >
-                  {item.label}
-                </a>
-              ))}
+              {socialLinks.map((item) => {
+                const Icon = item.icon;
+
+                return (
+                  <a
+                    key={item.name}
+                    href={item.href}
+                    target="_blank"
+                    rel="noreferrer"
+                    aria-label={item.name}
+                    className="flex h-10 w-10 items-center justify-center rounded-full border text-neutral-800"
+                  >
+                    <Icon className="h-4 w-4" />
+                  </a>
+                );
+              })}
             </div>
 
             <Button asChild className="mt-2 rounded-full">
