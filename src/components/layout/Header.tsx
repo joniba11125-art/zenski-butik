@@ -37,7 +37,7 @@ export function Header() {
 
           <div className="leading-tight">
             <p className="text-sm font-semibold tracking-[0.24em] text-black">
-              ZENSKI BUTIK
+              Dress Me Up
             </p>
             <p className="text-xs text-neutral-500">Premium fashion</p>
           </div>
