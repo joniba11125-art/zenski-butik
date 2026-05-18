@@ -1,40 +1,46 @@
-import type { Metadata } from 'next'
-import { Inter } from 'next/font/google'
-import './globals.css'
-import { Toaster } from 'sonner'
-import { Header } from '@/components/layout/Header'
-import { Footer } from '@/components/layout/Footer'
-
-const inter = Inter({ subsets: ['latin'] })
+﻿import type { Metadata } from "next";
+import "./globals.css";
+import { Header } from "@/components/layout/Header";
+import { Footer } from "@/components/layout/Footer";
 
 export const metadata: Metadata = {
   title: {
-    default: 'Butique - Premium Moda',
-    template: '%s | Butique'
+    default: "Zenski Butik | Elegantna zenska odjeca",
+    template: "%s | Zenski Butik",
   },
-  description: 'Otkrijte našu premium kolekciju ženske mode.',
+  description:
+    "Moderan online butik za zensku odjecu. Haljine, sakoi, kosulje i elegantni komadi za svaki dan.",
+  keywords: [
+    "zenski butik",
+    "zenska odjeca",
+    "haljine",
+    "sakoi",
+    "kosulje",
+    "online butik",
+    "moda",
+  ],
   openGraph: {
-    type: 'website',
-    locale: 'bs_BA',
-    siteName: 'Butique',
+    title: "Zenski Butik",
+    description:
+      "Moderan online butik za zensku odjecu. Elegantni komadi za svaki dan.",
+    type: "website",
+    locale: "bs_BA",
+    siteName: "Zenski Butik",
   },
-}
+};
 
 export default function RootLayout({
   children,
-}: {
-  children: React.ReactNode
-}) {
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
   return (
     <html lang="bs">
-      <body className={inter.className}>
+      <body>
         <Header />
-        <main className="min-h-screen">
-          {children}
-        </main>
+        {children}
         <Footer />
-        <Toaster position="top-center" richColors />
       </body>
     </html>
-  )
+  );
 }
