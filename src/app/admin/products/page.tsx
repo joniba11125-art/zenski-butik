@@ -21,6 +21,7 @@ import { Textarea } from "@/components/ui/textarea";
 
 type Product = {
   id: string;
+  product_code: string | null;
   name: string;
   slug: string;
   description: string | null;
@@ -126,6 +127,7 @@ export default function AdminProductsPage() {
   const [successMessage, setSuccessMessage] = useState("");
   const [editingProductId, setEditingProductId] = useState("");
   const [deletingProductId, setDeletingProductId] = useState("");
+  const [searchTerm, setSearchTerm] = useState("");
 
   const [name, setName] = useState("");
   const [category, setCategory] = useState("Haljine");
@@ -176,7 +178,7 @@ export default function AdminProductsPage() {
       .remove(paths);
 
     if (error) {
-      console.error("Greska pri brisanju slika iz Storage:", error.message);
+      console.error("Greška pri brisanju slika iz Storage:", error.message);
     }
   }
 
@@ -193,13 +195,13 @@ export default function AdminProductsPage() {
     const { data, error } = await supabase
       .from("products")
       .select(
-        "id, name, slug, description, category, price, old_price, sizes, colors, is_featured, is_active, stock, created_at"
+        "id, product_code, name, slug, description, category, price, old_price, sizes, colors, is_featured, is_active, stock, created_at"
       )
       .order("created_at", { ascending: false });
 
     if (error) {
-      console.error("Greska pri ucitavanju proizvoda:", error.message);
-      setErrorMessage("Proizvodi se nisu ucitali.");
+      console.error("Greška pri učitavanju proizvoda:", error.message);
+      setErrorMessage("Proizvodi se nisu učitali.");
       setProducts([]);
       setIsLoading(false);
       return;
@@ -216,7 +218,7 @@ export default function AdminProductsPage() {
         .order("sort_order", { ascending: true });
 
       if (imagesError) {
-        console.error("Greska pri ucitavanju slika:", imagesError.message);
+        console.error("Greška pri učitavanju slika:", imagesError.message);
         setProductImages([]);
       } else {
         setProductImages((imagesData as ProductImage[]) ?? []);
@@ -323,7 +325,7 @@ export default function AdminProductsPage() {
       });
 
     if (uploadError) {
-      console.error("Greska pri uploadu slike:", uploadError.message);
+      console.error("Greška pri uploadu slike:", uploadError.message);
       throw new Error("Slika nije uploadovana.");
     }
 
@@ -356,7 +358,7 @@ export default function AdminProductsPage() {
         );
 
       if (deleteError) {
-        console.error("Greska pri brisanju slika iz baze:", deleteError.message);
+        console.error("Greška pri brisanju slika iz baze:", deleteError.message);
       }
     }
 
@@ -375,7 +377,7 @@ export default function AdminProductsPage() {
           .eq("id", image.existingImageId);
 
         if (updateError) {
-          console.error("Greska pri izmjeni slike:", updateError.message);
+          console.error("Greška pri izmjeni slike:", updateError.message);
         }
       } else {
         const { error: insertError } = await supabase
@@ -388,7 +390,7 @@ export default function AdminProductsPage() {
           });
 
         if (insertError) {
-          console.error("Greska pri dodavanju slike:", insertError.message);
+          console.error("Greška pri dodavanju slike:", insertError.message);
         }
       }
     }
@@ -460,7 +462,7 @@ export default function AdminProductsPage() {
       .single();
 
     if (productError || !newProduct) {
-      console.error("Greska pri dodavanju proizvoda:", productError?.message);
+      console.error("Greška pri dodavanju proizvoda:", productError?.message);
       setErrorMessage(
         "Proizvod nije dodan. Mozda vec postoji proizvod sa istim nazivom."
       );
@@ -534,7 +536,7 @@ export default function AdminProductsPage() {
       .eq("id", editingProductId);
 
     if (productError) {
-      console.error("Greska pri izmjeni proizvoda:", productError.message);
+      console.error("Greška pri izmjeni proizvoda:", productError.message);
       setErrorMessage(
         "Proizvod nije izmijenjen. Mozda vec postoji proizvod sa istim nazivom."
       );
@@ -568,7 +570,7 @@ export default function AdminProductsPage() {
       .eq("id", product.id);
 
     if (error) {
-      console.error("Greska pri promjeni izdvojenog proizvoda:", error.message);
+      console.error("Greška pri promjeni izdvojenog proizvoda:", error.message);
       setErrorMessage("Izdvojeni status nije promijenjen.");
       return;
     }
@@ -595,7 +597,7 @@ export default function AdminProductsPage() {
       .eq("id", product.id);
 
     if (error) {
-      console.error("Greska pri promjeni statusa proizvoda:", error.message);
+      console.error("Greška pri promjeni statusa proizvoda:", error.message);
       setErrorMessage("Status proizvoda nije promijenjen.");
       return;
     }
@@ -611,7 +613,7 @@ export default function AdminProductsPage() {
 
   async function deleteProduct(product: Product) {
     const confirmed = window.confirm(
-      `Da li sigurno zelis obrisati proizvod: ${product.name}?`
+      `Da li sigurno želiš obrisati proizvod: ${product.name}?`
     );
 
     if (!confirmed) {
@@ -639,8 +641,8 @@ export default function AdminProductsPage() {
       .eq("id", product.id);
 
     if (error) {
-      console.error("Greska pri brisanju proizvoda:", error.message);
-      setErrorMessage("Proizvod nije obrisan. Pokusaj ponovo.");
+      console.error("Greška pri brisanju proizvoda:", error.message);
+      setErrorMessage("Proizvod nije obrisan. Pokušaj ponovo.");
       setDeletingProductId("");
       return;
     }
@@ -671,42 +673,56 @@ export default function AdminProductsPage() {
     return getProductImages(productId)[0];
   }
 
+  const filteredProducts = products.filter((product) => {
+    const searchValue = searchTerm.toLowerCase().trim();
+
+    if (!searchValue) {
+      return true;
+    }
+
+    return (
+      product.name.toLowerCase().includes(searchValue) ||
+      product.category.toLowerCase().includes(searchValue) ||
+      (product.product_code ?? "").toLowerCase().includes(searchValue)
+    );
+  });
+
   useEffect(() => {
     loadProducts();
   }, []);
 
   return (
-    <main className="min-h-screen bg-neutral-50">
-      <section className="border-b bg-white px-4 py-6">
+    <main className="admin-products-page min-h-screen bg-transparent">
+      <section className="border-b border-white/10 bg-[#061537] px-4 py-6 text-white">
         <div className="mx-auto flex max-w-7xl flex-col gap-4 md:flex-row md:items-center md:justify-between">
           <div>
-            <Button asChild variant="ghost" className="mb-3 px-0">
+            <Button asChild variant="ghost" className="mb-3 px-0 text-white hover:bg-white/10 hover:text-white">
               <Link href="/admin">
                 <ArrowLeft className="mr-2 h-4 w-4" />
                 Nazad na dashboard
               </Link>
             </Button>
 
-            <p className="text-sm uppercase tracking-[0.3em] text-neutral-500">
+            <p className="text-sm uppercase tracking-[0.3em] text-white/60">
               Admin
             </p>
-            <h1 className="mt-2 text-3xl font-semibold tracking-tight text-neutral-950">
+            <h1 className="mt-2 text-3xl font-semibold tracking-tight text-white">
               Proizvodi
             </h1>
           </div>
 
-          <Button variant="outline" onClick={loadProducts}>
+          <Button variant="outline" className="border-white/20 bg-white/10 text-white hover:bg-white/20 hover:text-white" onClick={loadProducts}>
             <RefreshCcw className="mr-2 h-4 w-4" />
-            Osvjezi
+            Osvježi
           </Button>
         </div>
       </section>
 
       <section className="px-4 py-8">
         <div className="mx-auto grid max-w-7xl gap-6 lg:grid-cols-[420px_1fr]">
-          <Card className="rounded-3xl">
-            <CardHeader>
-              <CardTitle>
+          <Card className="rounded-3xl border-0 shadow-sm">
+            <CardHeader className="pb-4">
+              <CardTitle className="text-xl">
                 {editingProductId ? "Uredi proizvod" : "Dodaj proizvod"}
               </CardTitle>
             </CardHeader>
@@ -918,7 +934,7 @@ export default function AdminProductsPage() {
                     ) : editingProductId ? (
                       <>
                         <Pencil className="mr-2 h-4 w-4" />
-                        Sacuvaj izmjene
+                        Sačuvaj izmjene
                       </>
                     ) : (
                       <>
@@ -944,23 +960,29 @@ export default function AdminProductsPage() {
             </CardContent>
           </Card>
 
-          <Card className="rounded-3xl">
-            <CardHeader>
-              <CardTitle>Lista proizvoda</CardTitle>
+          <Card className="rounded-3xl border-0 shadow-sm">
+            <CardHeader className="space-y-4">
+              <CardTitle className="text-xl">Lista proizvoda</CardTitle>
+
+              <Input
+                value={searchTerm}
+                onChange={(event) => setSearchTerm(event.target.value)}
+                placeholder="Pretraži po nazivu, kategoriji ili šifri artikla..."
+              />
             </CardHeader>
 
             <CardContent>
               {isLoading ? (
                 <div className="rounded-2xl bg-neutral-50 p-6 text-center text-neutral-600">
-                  Ucitavanje proizvoda...
+                  učitavanje proizvoda...
                 </div>
               ) : products.length === 0 ? (
                 <div className="rounded-2xl bg-neutral-50 p-6 text-center text-neutral-600">
-                  Jos nema proizvoda.
+                  Još nema proizvoda.
                 </div>
               ) : (
                 <div className="space-y-4">
-                  {products.map((product) => {
+                  {filteredProducts.map((product) => {
                     const image = getFirstProductImage(product.id);
                     const imageCount = getProductImages(product.id).length;
 
@@ -1001,6 +1023,10 @@ export default function AdminProductsPage() {
 
                           <p className="mt-1 text-sm text-neutral-600">
                             {product.category} / {product.price.toFixed(2)} KM
+                          </p>
+
+                          <p className="mt-1 text-xs font-semibold uppercase tracking-[0.18em] text-neutral-500">
+                            Šifra: {product.product_code ?? "-"}
                           </p>
 
                           <p className="mt-2 line-clamp-2 text-sm text-neutral-500">
@@ -1058,7 +1084,7 @@ export default function AdminProductsPage() {
                             ) : (
                               <>
                                 <Trash2 className="mr-2 h-4 w-4" />
-                                Obrisi
+                                Obriši
                               </>
                             )}
                           </Button>
@@ -1075,4 +1101,7 @@ export default function AdminProductsPage() {
     </main>
   );
 }
+
+
+
 

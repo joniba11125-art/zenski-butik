@@ -64,53 +64,53 @@ export function Testimonials() {
   }, [supabase]);
 
   return (
-    <section className="bg-neutral-50 px-4 py-20">
+    <section className="bg-neutral-50 px-4 py-10 md:py-16">
       <div className="mx-auto max-w-7xl">
-        <div className="mb-10 text-center">
-          <p className="mb-3 text-sm uppercase tracking-[0.3em] text-neutral-500">
+        <div className="mb-7 text-center">
+          <p className="mb-2 text-xs uppercase tracking-[0.3em] text-neutral-500">
             Recenzije
           </p>
 
-          <h2 className="text-3xl font-semibold tracking-tight text-neutral-950 md:text-5xl">
-            Sta kazu nase kupce
+          <h2 className="text-2xl font-semibold tracking-tight text-neutral-950 md:text-5xl">
+            Šta kažu naši kupci
           </h2>
 
-          <p className="mx-auto mt-4 max-w-2xl text-neutral-600">
-            Iskustva kupaca koji vole elegantan, moderan i minimalisticki stil.
+          <p className="mx-auto mt-3 max-w-2xl text-sm text-neutral-600 md:text-base">
+            Iskustva kupaca koji vole elegantan, moderan i minimalistički stil.
           </p>
         </div>
 
-        <div className="grid gap-5 md:grid-cols-3">
+        <div className="grid gap-3 md:gap-5 md:grid-cols-3">
           {reviews.map((review) => (
             <Card
               key={review.id}
-              className="rounded-3xl border-neutral-200 bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-md"
+              className="rounded-2xl border-neutral-200 bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-md md:rounded-3xl"
             >
-              <CardContent className="flex h-full flex-col p-6">
-                <div className="mb-5 flex items-center justify-between gap-4">
+              <CardContent className="flex h-full flex-col p-4 md:p-6">
+                <div className="mb-3 flex items-center justify-between gap-4">
                   <div className="flex gap-1">
                     {Array.from({ length: review.rating }).map((_, index) => (
                       <Star
                         key={index}
-                        className="h-4 w-4 fill-neutral-950 text-neutral-950"
+                        className="h-3.5 w-3.5 fill-neutral-950 text-neutral-950 md:h-4 md:w-4"
                       />
                     ))}
                   </div>
 
-                  <div className="flex h-9 w-9 items-center justify-center rounded-full bg-neutral-100">
+                  <div className="hidden h-9 w-9 items-center justify-center rounded-full bg-neutral-100 md:flex">
                     <Quote className="h-4 w-4 text-neutral-500" />
                   </div>
                 </div>
 
-                <p className="text-base font-medium leading-8 text-neutral-800">
+                <p className="line-clamp-2 text-sm font-medium leading-6 text-neutral-800 md:line-clamp-none md:text-base md:leading-8">
                   "{review.comment}"
                 </p>
 
-                <div className="mt-6 border-t pt-4">
-                  <p className="text-base font-semibold text-neutral-950">
+                <div className="mt-3 border-t pt-3 md:mt-4">
+                  <p className="text-sm font-semibold text-neutral-950 md:text-base">
                     {review.customer_name}
                   </p>
-                  <p className="mt-1 text-[11px] uppercase tracking-[0.25em] text-neutral-400">
+                  <p className="mt-0.5 text-[10px] uppercase tracking-[0.22em] text-neutral-400 md:mt-1 md:text-[11px]">
                     Kupac
                   </p>
                 </div>
@@ -122,3 +122,4 @@ export function Testimonials() {
     </section>
   );
 }
+

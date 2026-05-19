@@ -88,8 +88,8 @@ export default function AdminReviewsPage() {
       .order("created_at", { ascending: false });
 
     if (error) {
-      console.error("Greska pri ucitavanju recenzija:", error.message);
-      setErrorMessage("Recenzije se nisu ucitale.");
+      console.error("Greška pri učitavanju recenzija:", error.message);
+      setErrorMessage("Recenzije se nisu učitale.");
       setReviews([]);
       setIsLoading(false);
       return;
@@ -161,7 +161,7 @@ export default function AdminReviewsPage() {
     });
 
     if (error) {
-      console.error("Greska pri dodavanju recenzije:", error.message);
+      console.error("Greška pri dodavanju recenzije:", error.message);
       setErrorMessage("Recenzija nije dodana.");
       setIsSaving(false);
       return;
@@ -203,7 +203,7 @@ export default function AdminReviewsPage() {
       .eq("id", editingReviewId);
 
     if (error) {
-      console.error("Greska pri izmjeni recenzije:", error.message);
+      console.error("Greška pri izmjeni recenzije:", error.message);
       setErrorMessage("Recenzija nije izmijenjena.");
       setIsSaving(false);
       return;
@@ -228,7 +228,7 @@ export default function AdminReviewsPage() {
       .eq("id", review.id);
 
     if (error) {
-      console.error("Greska pri promjeni statusa recenzije:", error.message);
+      console.error("Greška pri promjeni statusa recenzije:", error.message);
       setErrorMessage("Status recenzije nije promijenjen.");
       return;
     }
@@ -244,7 +244,7 @@ export default function AdminReviewsPage() {
 
   async function deleteReview(review: Review) {
     const confirmed = window.confirm(
-      `Da li sigurno zelis obrisati recenziju od: ${review.customer_name}?`
+      `Da li sigurno želiš obrisati recenziju od: ${review.customer_name}?`
     );
 
     if (!confirmed) {
@@ -268,7 +268,7 @@ export default function AdminReviewsPage() {
       .eq("id", review.id);
 
     if (error) {
-      console.error("Greska pri brisanju recenzije:", error.message);
+      console.error("Greška pri brisanju recenzije:", error.message);
       setErrorMessage("Recenzija nije obrisana.");
       setDeletingReviewId("");
       return;
@@ -312,7 +312,7 @@ export default function AdminReviewsPage() {
 
           <Button variant="outline" onClick={loadReviews}>
             <RefreshCcw className="mr-2 h-4 w-4" />
-            Osvjezi
+            Osvježi
           </Button>
         </div>
       </section>
@@ -421,7 +421,7 @@ export default function AdminReviewsPage() {
                     ) : editingReviewId ? (
                       <>
                         <Pencil className="mr-2 h-4 w-4" />
-                        Sacuvaj izmjene
+                        Sačuvaj izmjene
                       </>
                     ) : (
                       <>
@@ -455,11 +455,11 @@ export default function AdminReviewsPage() {
             <CardContent>
               {isLoading ? (
                 <div className="rounded-2xl bg-neutral-50 p-6 text-center text-neutral-600">
-                  Ucitavanje recenzija...
+                  učitavanje recenzija...
                 </div>
               ) : reviews.length === 0 ? (
                 <div className="rounded-2xl bg-neutral-50 p-6 text-center text-neutral-600">
-                  Jos nema recenzija.
+                  Još nema recenzija.
                 </div>
               ) : (
                 <div className="space-y-4">
@@ -537,7 +537,7 @@ export default function AdminReviewsPage() {
                           ) : (
                             <>
                               <Trash2 className="mr-2 h-4 w-4" />
-                              Obrisi
+                              Obriši
                             </>
                           )}
                         </Button>
@@ -553,3 +553,4 @@ export default function AdminReviewsPage() {
     </main>
   );
 }
+

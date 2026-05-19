@@ -4,6 +4,7 @@ import { Resend } from "resend";
 const resend = new Resend(process.env.RESEND_API_KEY);
 
 type ReservationEmailPayload = {
+  productCode: string | null;
   productName: string;
   selectedSize: string | null;
   firstName: string;
@@ -16,11 +17,12 @@ type ReservationEmailPayload = {
 function createAdminEmail(payload: ReservationEmailPayload) {
   return `
     <div style="font-family: Arial, sans-serif; line-height: 1.6; color: #111;">
-      <h1>Nova rezervacija</h1>
-      <p>Stigla je nova rezervacija iz webshopa.</p>
+      <h1>Nova Rezervacija</h1>
+      <p>Stigla je nova Rezervacija iz webshopa.</p>
 
       <h2>Proizvod</h2>
       <p><strong>Naziv:</strong> ${payload.productName}</p>
+      <p><strong>Šifra artikla:</strong> ${payload.productCode || "-"}</p>
       <p><strong>Velicina:</strong> ${payload.selectedSize || "-"}</p>
 
       <h2>Kupac</h2>
@@ -39,15 +41,16 @@ function createCustomerEmail(payload: ReservationEmailPayload) {
     <div style="font-family: Arial, sans-serif; line-height: 1.6; color: #111;">
       <h1>Rezervacija je zaprimljena</h1>
 
-      <p>Postovana/i ${payload.firstName},</p>
+      <p>Poštovana/i ${payload.firstName},</p>
 
-      <p>Hvala na rezervaciji. Zaprimili smo tvoj zahtjev i uskoro cemo te kontaktirati za potvrdu.</p>
+      <p>Hvala na rezervaciji. Zaprimili smo tvoj zahtjev i uskoro ćemo te kontaktirati za potvrdu.</p>
 
       <h2>Detalji rezervacije</h2>
       <p><strong>Proizvod:</strong> ${payload.productName}</p>
+      <p><strong>Šifra artikla:</strong> ${payload.productCode || "-"}</p>
       <p><strong>Velicina:</strong> ${payload.selectedSize || "-"}</p>
 
-      <p style="margin-top: 24px;">Zenski Butik</p>
+      <p style="margin-top: 24px;">ženski Butik</p>
     </div>
   `;
 }
@@ -57,7 +60,7 @@ export async function POST(request: Request) {
     const payload = (await request.json()) as ReservationEmailPayload;
 
     const adminEmail = process.env.ADMIN_EMAIL;
-    const fromEmail = process.env.RESEND_FROM_EMAIL || "Zenski Butik <onboarding@resend.dev>";
+    const fromEmail = process.env.RESEND_FROM_EMAIL || "ženski Butik <onboarding@resend.dev>";
 
     if (!process.env.RESEND_API_KEY) {
       return NextResponse.json(
@@ -83,14 +86,14 @@ export async function POST(request: Request) {
     const adminResult = await resend.emails.send({
       from: fromEmail,
       to: adminEmail,
-      subject: `Nova rezervacija: ${payload.productName}`,
+      subject: `Nova Rezervacija: ${payload.productName}`,
       html: createAdminEmail(payload),
     });
 
     const customerResult = await resend.emails.send({
       from: fromEmail,
       to: payload.email,
-      subject: "Potvrda rezervacije - Zenski Butik",
+      subject: "Potvrda rezervacije - ženski Butik",
       html: createCustomerEmail(payload),
     });
 
@@ -108,3 +111,5 @@ export async function POST(request: Request) {
     );
   }
 }
+
+

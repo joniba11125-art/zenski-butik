@@ -19,6 +19,7 @@ import { Textarea } from "@/components/ui/textarea";
 
 type ReservationProduct = {
   id: string;
+  product_code?: string | null;
   name: string;
   category: string;
   price: number;
@@ -44,6 +45,27 @@ const reservationSchema = z.object({
 
 type ReservationFormValues = z.infer<typeof reservationSchema>;
 
+function formatPhoneNumber(value: string) {
+  const digits = value.replace(/\D/g, "").slice(0, 10);
+
+  if (digits.length <= 3) {
+    return digits;
+  }
+
+  if (digits.length <= 5) {
+    return `${digits.slice(0, 3)}-${digits.slice(3)}`;
+  }
+
+  if (digits.length <= 7) {
+    return `${digits.slice(0, 3)}-${digits.slice(3, 5)}-${digits.slice(5)}`;
+  }
+
+  return `${digits.slice(0, 3)}-${digits.slice(3, 5)}-${digits.slice(
+    5,
+    7
+  )}-${digits.slice(7)}`;
+}
+
 function isUuid(value: string) {
   return /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(
     value
@@ -66,6 +88,7 @@ export function ReservationModal({
     handleSubmit,
     reset,
     formState: { errors, isSubmitting },
+    setValue,
   } = useForm<ReservationFormValues>({
     resolver: zodResolver(reservationSchema),
     defaultValues: {
@@ -84,6 +107,7 @@ export function ReservationModal({
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
+        productCode: product.product_code ?? null,
         productName: product.name,
         selectedSize: selectedSize || null,
         firstName: values.firstName,
@@ -105,6 +129,7 @@ export function ReservationModal({
 
     const payload = {
       product_id: isUuid(product.id) ? product.id : null,
+      product_code: product.product_code ?? null,
       product_name: product.name,
       selected_size: selectedSize || null,
       first_name: values.firstName,
@@ -155,9 +180,9 @@ export function ReservationModal({
     <Dialog open={open} onOpenChange={closeModal}>
       <DialogContent className="max-w-xl rounded-3xl">
         <DialogHeader>
-          <DialogTitle className="text-2xl">Rezervisi proizvod</DialogTitle>
+          <DialogTitle className="text-2xl">Rezerviši proizvod</DialogTitle>
           <DialogDescription>
-            Popuni podatke i poslat cemo ti potvrdu rezervacije.
+            Popuni podatke i poslat ćemo ti potvrdu rezervacije.
           </DialogDescription>
         </DialogHeader>
 
@@ -224,7 +249,17 @@ export function ReservationModal({
           <div className="grid gap-4 sm:grid-cols-2">
             <div>
               <label className="mb-2 block text-sm font-medium">Telefon</label>
-              <Input placeholder="+387..." {...register("phone")} />
+              <Input
+                placeholder="061-23-45-67"
+                {...register("phone")}
+                onChange={(event) => {
+                  const formattedPhone = formatPhoneNumber(event.target.value);
+                  setValue("phone", formattedPhone, {
+                    shouldValidate: true,
+                    shouldDirty: true,
+                  });
+                }}
+              />
               {errors.phone ? (
                 <p className="mt-1 text-sm text-red-600">
                   {errors.phone.message}
@@ -248,7 +283,7 @@ export function ReservationModal({
               Poruka opcionalno
             </label>
             <Textarea
-              placeholder="Npr. zanima me dostupnost, dostava ili preuzimanje..."
+              placeholder="Npr. zanima me dostupnost, Dostava ili preuzimanje..."
               rows={4}
               {...register("message")}
             />
@@ -277,11 +312,21 @@ export function ReservationModal({
                 Slanje...
               </>
             ) : (
-              "Posalji rezervaciju"
+              "Pošalji rezervaciju"
             )}
           </Button>
+
+          <p className="text-center text-xs leading-5 text-neutral-500">
+            Nakon što pošaljete rezervaciju, kontaktirat ćemo vas za potvrdu
+            narudžbe putem telefona ili emaila.
+          </p>
         </form>
       </DialogContent>
     </Dialog>
   );
 }
+
+
+
+
+

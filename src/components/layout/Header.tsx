@@ -1,5 +1,6 @@
 ﻿"use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 import { Menu, ShoppingBag, X } from "lucide-react";
@@ -7,10 +8,11 @@ import { FaFacebookF, FaInstagram } from "react-icons/fa";
 import { Button } from "@/components/ui/button";
 
 const navigation = [
-  { name: "Pocetna", href: "/" },
+  { name: "Početna", href: "/" },
   { name: "Shop", href: "/shop" },
   { name: "O nama", href: "/#about" },
   { name: "Kontakt", href: "/#contact" },
+  { name: "FAQ", href: "/#faq" },
 ];
 
 const socialLinks = [
@@ -30,29 +32,35 @@ export function Header() {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-50 border-b bg-white/95 backdrop-blur">
+    <header className="sticky top-0 z-50 border-b border-white/10 bg-[#061537]/95 backdrop-blur">
       <div className="mx-auto flex h-20 max-w-7xl items-center justify-between px-4">
         <Link href="/" className="flex items-center gap-3">
-          <div className="flex h-11 w-11 items-center justify-center rounded-full bg-neutral-950 text-sm font-semibold text-white">
-            DMU
+          <div className="relative h-14 w-14">
+            <Image
+              src="/dressmeup-logo.png"
+              alt="Dress Me Up Boutique"
+              fill
+              className="object-contain"
+              priority
+            />
           </div>
 
           <div>
-            <p className="text-xl font-semibold leading-none tracking-tight text-neutral-950">
+            <p className="text-xl font-semibold leading-none tracking-tight text-white">
               Dress Me Up
             </p>
-            <p className="mt-1 text-xs text-neutral-500">Boutique Tuzla</p>
+            <p className="mt-1 text-xs text-amber-200/80">Boutique Tuzla</p>
           </div>
         </Link>
 
-        <nav className="hidden items-center gap-8 text-sm font-medium text-neutral-700 md:flex">
+        <nav className="hidden items-center gap-8 text-sm font-medium text-white/85 md:flex">
           {navigation.map((item) => (
-            <Link key={item.name} href={item.href} className="hover:text-black">
+            <Link key={item.name} href={item.href} className="hover:text-amber-200">
               {item.name}
             </Link>
           ))}
 
-          <div className="h-5 w-px bg-neutral-200" />
+          <div className="h-5 w-px bg-white/15" />
 
           {socialLinks.map((item) => {
             const Icon = item.icon;
@@ -64,7 +72,7 @@ export function Header() {
                 target="_blank"
                 rel="noreferrer"
                 aria-label={item.name}
-                className="flex h-9 w-9 items-center justify-center rounded-full border text-neutral-700 transition hover:border-neutral-950 hover:bg-neutral-950 hover:text-white"
+                className="flex h-9 w-9 items-center justify-center rounded-full border text-white/85 transition hover:border-amber-200 hover:bg-amber-100 hover:text-neutral-950"
               >
                 <Icon className="h-4 w-4" />
               </a>
@@ -73,7 +81,7 @@ export function Header() {
         </nav>
 
         <div className="hidden items-center gap-3 md:flex">
-          <Button asChild className="rounded-full">
+          <Button asChild className="rounded-full bg-amber-100 text-neutral-950 hover:bg-amber-200">
             <Link href="/shop">
               <ShoppingBag className="mr-2 h-4 w-4" />
               Kolekcija
@@ -83,10 +91,10 @@ export function Header() {
 
         <button
           type="button"
-          className="rounded-full border p-2 md:hidden"
+          className="flex h-11 w-11 items-center justify-center rounded-full border border-white/30 bg-white/10 text-white transition hover:bg-white/20 md:hidden"
           onClick={() => setIsOpen((current) => !current)}
         >
-          {isOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+          {isOpen ? <X className="h-6 w-6 text-white" /> : <Menu className="h-6 w-6 text-white" />}
         </button>
       </div>
 
@@ -134,3 +142,5 @@ export function Header() {
     </header>
   );
 }
+
+

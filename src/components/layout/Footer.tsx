@@ -12,14 +12,14 @@ export function Footer() {
           </Link>
 
           <p className="mt-4 max-w-md text-sm leading-7 text-neutral-300">
-            Dress Me Up Boutique je butik iz Tuzle za elegantnu i svecanu modu
+            Dress Me Up Boutique je butik iz Tuzle za elegantnu i svečanu modu
             za svaki dan.
           </p>
 
           <div className="mt-6 grid gap-3 text-sm text-neutral-300 sm:grid-cols-2">
             <div className="rounded-2xl bg-white/5 p-4">
               <PackageCheck className="mb-2 h-5 w-5 text-white" />
-              <p className="font-medium text-white">Brza posta BiH</p>
+              <p className="font-medium text-white">Brza pošta BiH</p>
               <p className="mt-1 text-neutral-400">Dostava 11,00 KM</p>
             </div>
 
@@ -40,7 +40,7 @@ export function Footer() {
 
           <div className="space-y-3 text-sm text-neutral-300">
             <Link href="/" className="block hover:text-white">
-              Pocetna
+              Početna
             </Link>
             <Link href="/shop" className="block hover:text-white">
               Shop
@@ -71,7 +71,7 @@ export function Footer() {
             </div>
 
             <p className="text-neutral-400">
-              Isporuka 1/3 radna dana. Dozvoljeno otvaranje paketa.
+              Isporuka 1-3 radna dana. Dozvoljeno otvaranje paketa.
             </p>
 
             <div className="flex flex-wrap gap-2 pt-2">
@@ -132,3 +132,4 @@ export function Footer() {
     </footer>
   );
 }
+

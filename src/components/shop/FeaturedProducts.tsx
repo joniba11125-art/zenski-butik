@@ -16,6 +16,7 @@ type ProductImage = {
 
 type Product = {
   id: string;
+  product_code: string | null;
   name: string;
   slug: string;
   description: string | null;
@@ -35,6 +36,7 @@ function mapProductForCard(product: Product) {
 
   return {
     id: product.id,
+    product_code: product.product_code,
     name: product.name,
     category: product.category,
     price: product.price,
@@ -61,7 +63,7 @@ export function FeaturedProducts() {
       const { data, error } = await supabase
         .from("products")
         .select(
-          "id, name, slug, description, category, price, old_price, sizes, colors, is_featured, is_active, stock, product_images(image_url, alt_text, sort_order)"
+          "id, product_code, name, slug, description, category, price, old_price, sizes, colors, is_featured, is_active, stock, product_images(image_url, alt_text, sort_order)"
         )
         .eq("is_active", true)
         .eq("is_featured", true)
@@ -69,7 +71,7 @@ export function FeaturedProducts() {
         .limit(3);
 
       if (error) {
-        console.error("Greska pri ucitavanju izdvojenih proizvoda:", error.message);
+        console.error("Greska pri ucitavanju izdvojenih Proizvoda:", error.message);
         setProducts([]);
         setIsLoading(false);
         return;
@@ -84,7 +86,7 @@ export function FeaturedProducts() {
       const { data: fallbackData, error: fallbackError } = await supabase
         .from("products")
         .select(
-          "id, name, slug, description, category, price, old_price, sizes, colors, is_featured, is_active, stock, product_images(image_url, alt_text, sort_order)"
+          "id, product_code, name, slug, description, category, price, old_price, sizes, colors, is_featured, is_active, stock, product_images(image_url, alt_text, sort_order)"
         )
         .eq("is_active", true)
         .order("created_at", { ascending: false })
@@ -92,7 +94,7 @@ export function FeaturedProducts() {
 
       if (fallbackError) {
         console.error(
-          "Greska pri ucitavanju proizvoda za pocetnu:",
+          "Greska pri ucitavanju Proizvoda za pocetnu:",
           fallbackError.message
         );
         setProducts([]);
@@ -112,8 +114,13 @@ export function FeaturedProducts() {
   }
 
   return (
-    <section className="bg-white px-4 py-20">
-      <div className="mx-auto max-w-7xl">
+    <section className="relative overflow-hidden bg-[#fffaf0] px-4 py-16">
+      <div className="pointer-events-none absolute inset-0">
+        <div className="absolute left-[-10%] top-[-20%] h-80 w-80 rounded-full bg-[#d4af37]/20 blur-3xl" />
+        <div className="absolute right-[-10%] bottom-[-30%] h-96 w-96 rounded-full bg-[#d4af37]/15 blur-3xl" />
+      </div>
+
+      <div className="relative mx-auto max-w-7xl">
         <div className="mb-10 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
           <div>
             <p className="mb-3 text-sm uppercase tracking-[0.3em] text-neutral-500">
@@ -121,11 +128,11 @@ export function FeaturedProducts() {
             </p>
 
             <h2 className="text-3xl font-semibold tracking-tight text-neutral-950 md:text-5xl">
-              Najtrazeniji komadi
+              Najtraženiji komadi
             </h2>
 
             <p className="mt-4 max-w-2xl text-neutral-600">
-              Odabrani proizvodi za moderan, elegantan i minimalisticki stil.
+              Odabrani proizvodi za moderan, elegantan i minimalistički stil.
             </p>
           </div>
 
@@ -139,11 +146,11 @@ export function FeaturedProducts() {
 
         {isLoading ? (
           <div className="rounded-3xl border bg-neutral-50 p-10 text-center text-neutral-600">
-            Ucitavanje proizvoda...
+            Učitavanje Proizvoda...
           </div>
         ) : products.length === 0 ? (
           <div className="rounded-3xl border bg-neutral-50 p-10 text-center text-neutral-600">
-            Trenutno nema izdvojenih proizvoda.
+            Trenutno nema izdvojenih Proizvoda.
           </div>
         ) : (
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
@@ -168,3 +175,5 @@ export function FeaturedProducts() {
     </section>
   );
 }
+
+

@@ -1,7 +1,6 @@
 ﻿import type { Metadata } from "next";
 import "./globals.css";
-import { Header } from "@/components/layout/Header";
-import { Footer } from "@/components/layout/Footer";
+import { AppShell } from "@/components/layout/AppShell";
 
 export const metadata: Metadata = {
   title: {
@@ -9,13 +8,13 @@ export const metadata: Metadata = {
     template: "%s | Dress Me Up Boutique",
   },
   description:
-    "Dress Me Up Boutique Tuzla - elegantna i svecana moda za svaki dan. Butik na adresi Irac, Rudarska 50, Tuzla.",
+    "Dress Me Up Boutique Tuzla - elegantna i svečana moda za svaki dan. Butik na adresi Irac, Rudarska 50, Tuzla.",
   keywords: [
     "Dress Me Up Boutique",
     "butik Tuzla",
-    "zenska odjeca Tuzla",
+    "ženska odjeća Tuzla",
     "elegantna moda",
-    "svecana moda",
+    "svečana moda",
     "haljine",
     "kompleti",
     "boutique",
@@ -38,9 +37,7 @@ export default function RootLayout({
   return (
     <html lang="bs">
       <body>
-        <Header />
-        {children}
-        <Footer />
+        <AppShell>{children}</AppShell>
       </body>
     </html>
   );

@@ -29,7 +29,7 @@ export default function AdminLoginPage() {
     });
 
     if (error) {
-      setErrorMessage("Email ili sifra nisu ispravni.");
+      setErrorMessage("Email ili šifra nisu ispravni.");
       setIsLoading(false);
       return;
     }
@@ -71,7 +71,7 @@ export default function AdminLoginPage() {
             </div>
 
             <div>
-              <label className="mb-2 block text-sm font-medium">Sifra</label>
+              <label className="mb-2 block text-sm font-medium">šifra</label>
               <div className="relative">
                 <Lock className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-neutral-400" />
                 <Input
@@ -111,3 +111,4 @@ export default function AdminLoginPage() {
     </main>
   );
 }
+

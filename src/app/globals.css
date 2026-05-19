@@ -133,3 +133,113 @@ html {
 ::-webkit-scrollbar-thumb:hover {
   background: #555;
 }
+/* Admin theme */
+.admin-shell main {
+  background: #101827 !important;
+}
+
+.admin-shell main > section:first-child {
+  background: #061537 !important;
+  color: white !important;
+  border-color: rgba(255, 255, 255, 0.12) !important;
+}
+
+.admin-shell main > section:first-child h1,
+.admin-shell main > section:first-child h2,
+.admin-shell main > section:first-child p {
+  color: white !important;
+}
+
+.admin-shell main > section:first-child p:first-child,
+.admin-shell main > section:first-child .tracking-\[0\.3em\] {
+  color: rgba(255, 255, 255, 0.65) !important;
+}
+
+.admin-shell main > section:first-child a {
+  color: white !important;
+}
+
+.admin-shell main > section:first-child button {
+  border-color: rgba(255, 255, 255, 0.25) !important;
+}
+
+.admin-shell main > section:not(:first-child) {
+  background: transparent !important;
+}
+
+.admin-shell [data-slot="card"] {
+  background: white;
+}
+
+.admin-shell input,
+.admin-shell select,
+.admin-shell textarea {
+  background: white;
+}
+
+.admin-shell main > section:first-child button {
+  background: rgba(255, 255, 255, 0.1) !important;
+  color: white !important;
+  border-color: rgba(255, 255, 255, 0.25) !important;
+}
+
+.admin-shell main > section:first-child button:hover {
+  background: rgba(255, 255, 255, 0.18) !important;
+  color: white !important;
+}
+
+/* Admin products polish */
+.admin-products-page [data-slot="card"] {
+  border: 0 !important;
+  box-shadow: 0 18px 45px rgba(0, 0, 0, 0.08) !important;
+}
+
+.admin-products-page label {
+  color: #262626;
+}
+
+.admin-products-page input,
+.admin-products-page textarea,
+.admin-products-page select {
+  border-color: #e5e5e5;
+}
+
+.admin-products-page input:focus,
+.admin-products-page textarea:focus,
+.admin-products-page select:focus {
+  border-color: #061537;
+}
+
+.admin-products-page .space-y-4 > div[class*="rounded"] {
+  transition: 180ms ease;
+}
+
+.admin-products-page .space-y-4 > div[class*="rounded"]:hover {
+  transform: translateY(-1px);
+}
+
+/* Softer admin cards */
+.admin-shell [data-slot="card"] {
+  background: #f4f7fb !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+}
+
+.admin-shell [data-slot="card"] .bg-neutral-50 {
+  background: #eaf0f8 !important;
+}
+
+.admin-shell [data-slot="card"] .bg-white {
+  background: #f8fafc !important;
+}
+
+.admin-shell input,
+.admin-shell select,
+.admin-shell textarea {
+  background: #f8fafc !important;
+}
+
+.admin-shell .rounded-3xl.bg-white,
+.admin-shell .rounded-\[2rem\].bg-white,
+.admin-shell .rounded-\[1\.75rem\].bg-white {
+  background: #f4f7fb !important;
+}
