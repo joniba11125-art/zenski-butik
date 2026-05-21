@@ -18,6 +18,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { CropImageModal } from "@/components/admin/CropImageModal";
 
 type Product = {
   id: string;
@@ -34,6 +35,11 @@ type Product = {
   is_active: boolean | null;
   stock: number | null;
   created_at: string;
+};
+
+type ProductCategory = {
+  id: string;
+  name: string;
 };
 
 type ProductImage = {
@@ -66,23 +72,23 @@ const sizeOptions = ["XS", "S", "M", "L", "XL"];
 const colorOptions = [
   "Crna",
   "Bijela",
-  "Bez",
+  "Bež",
   "Siva",
-  "Smedja",
+  "Smeđa",
   "Roza",
   "Crvena",
   "Plava",
   "Zelena",
-  "Zuta",
-  "Narandzasta",
-  "Ljubicasta",
+  "Žuta",
+  "Narandžasta",
+  "Ljubičasta",
   "Bordo",
   "Maslinasta",
-  "Tamnoplava",
+  "Tamno plava",
   "Krem",
   "Zlatna",
   "Srebrna",
-  "Sareni dezen",
+  "Šareni dezen",
 ];
 
 function createSlug(value: string) {
@@ -128,6 +134,9 @@ export default function AdminProductsPage() {
   const [editingProductId, setEditingProductId] = useState("");
   const [deletingProductId, setDeletingProductId] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
+  const [productCategories, setProductCategories] = useState<string[]>(categoryOptions);
+  const [newCategoryName, setNewCategoryName] = useState("");
+  const [isAddingCategory, setIsAddingCategory] = useState(false);
 
   const [name, setName] = useState("");
   const [category, setCategory] = useState("Haljine");
@@ -138,6 +147,8 @@ export default function AdminProductsPage() {
   const [selectedColors, setSelectedColors] = useState<string[]>([]);
   const [description, setDescription] = useState("");
   const [previewImages, setPreviewImages] = useState<PreviewImage[]>([]);
+  const [cropQueue, setCropQueue] = useState<File[]>([]);
+  const [currentCropFile, setCurrentCropFile] = useState<File | null>(null);
 
   async function checkAdmin() {
     const {
@@ -179,6 +190,30 @@ export default function AdminProductsPage() {
 
     if (error) {
       console.error("Greška pri brisanju slika iz Storage:", error.message);
+    }
+  }
+
+  async function loadProductCategories() {
+    const { data, error } = await supabase
+      .from("product_categories")
+      .select("id, name")
+      .order("name", { ascending: true });
+
+    if (error) {
+      console.error("Greška pri učitavanju kategorija:", error.message);
+      setProductCategories(categoryOptions);
+      return;
+    }
+
+    const categoriesFromDatabase = ((data as ProductCategory[]) ?? []).map(
+      (item) => item.name
+    );
+
+    if (categoriesFromDatabase.length > 0) {
+      setProductCategories(categoriesFromDatabase);
+      if (!categoriesFromDatabase.includes(category)) {
+        setCategory(categoriesFromDatabase[0]);
+      }
     }
   }
 
@@ -273,6 +308,45 @@ export default function AdminProductsPage() {
       top: 0,
       behavior: "smooth",
     });
+  }
+
+  async function addProductCategory() {
+    const cleanCategoryName = newCategoryName.trim();
+
+    if (!cleanCategoryName) {
+      setErrorMessage("Unesi naziv kategorije.");
+      return;
+    }
+
+    setIsAddingCategory(true);
+    setErrorMessage("");
+    setSuccessMessage("");
+
+    const isAdmin = await checkAdmin();
+
+    if (!isAdmin) {
+      setIsAddingCategory(false);
+      return;
+    }
+
+    const { error } = await supabase.from("product_categories").insert({
+      name: cleanCategoryName,
+    });
+
+    if (error) {
+      console.error("Greška pri dodavanju kategorije:", error.message);
+      setErrorMessage("Kategorija nije dodana ili već postoji.");
+      setIsAddingCategory(false);
+      return;
+    }
+
+    setProductCategories((currentCategories) =>
+      [...currentCategories, cleanCategoryName].sort()
+    );
+    setCategory(cleanCategoryName);
+    setNewCategoryName("");
+    setSuccessMessage("Kategorija je dodana.");
+    setIsAddingCategory(false);
   }
 
   function toggleValue(
@@ -688,6 +762,7 @@ export default function AdminProductsPage() {
   });
 
   useEffect(() => {
+    loadProductCategories();
     loadProducts();
   }, []);
 
@@ -745,17 +820,36 @@ export default function AdminProductsPage() {
                   <label className="mb-2 block text-sm font-medium">
                     Kategorija
                   </label>
-                  <div className="flex flex-wrap gap-2">
-                    {categoryOptions.map((item) => (
-                      <Button
-                        key={item}
-                        type="button"
-                        variant={category === item ? "default" : "outline"}
-                        onClick={() => setCategory(item)}
-                      >
-                        {item}
-                      </Button>
-                    ))}
+
+                  <div className="grid gap-3 md:grid-cols-[1fr_auto_auto]">
+                    <select
+                      value={category}
+                      onChange={(event) => setCategory(event.target.value)}
+                      className="h-11 rounded-full border bg-white px-4 text-sm outline-none focus:border-neutral-950"
+                    >
+                      {productCategories.map((item) => (
+                        <option key={item} value={item}>
+                          {item}
+                        </option>
+                      ))}
+                    </select>
+
+                    <Input
+                      value={newCategoryName}
+                      onChange={(event) => setNewCategoryName(event.target.value)}
+                      placeholder="Nova kategorija"
+                      className="rounded-full"
+                    />
+
+                    <Button
+                      type="button"
+                      variant="outline"
+                      className="rounded-full"
+                      disabled={isAddingCategory}
+                      onClick={addProductCategory}
+                    >
+                      {isAddingCategory ? "Dodavanje..." : "Dodaj kategoriju"}
+                    </Button>
                   </div>
                 </div>
 
@@ -821,22 +915,38 @@ export default function AdminProductsPage() {
                   <label className="mb-2 block text-sm font-medium">
                     Boje
                   </label>
-                  <div className="flex flex-wrap gap-2">
-                    {colorOptions.map((item) => (
-                      <Button
-                        key={item}
-                        type="button"
-                        variant={
-                          selectedColors.includes(item) ? "default" : "outline"
-                        }
-                        onClick={() =>
-                          toggleValue(item, selectedColors, setSelectedColors)
-                        }
-                      >
-                        {item}
-                      </Button>
-                    ))}
-                  </div>
+
+                  <details className="group rounded-2xl border bg-white">
+                    <summary className="flex cursor-pointer list-none items-center justify-between gap-3 px-4 py-3 text-sm font-medium">
+                      <span>
+                        {selectedColors.length > 0
+                          ? selectedColors.join(", ")
+                          : "Odaberi boje"}
+                      </span>
+                      <span className="text-xs text-neutral-500">
+                        {selectedColors.length} označeno
+                      </span>
+                    </summary>
+
+                    <div className="grid max-h-56 gap-2 overflow-y-auto border-t p-3 sm:grid-cols-2 md:grid-cols-3">
+                      {colorOptions.map((item) => (
+                        <label
+                          key={item}
+                          className="flex cursor-pointer items-center gap-2 rounded-xl bg-neutral-50 px-3 py-2 text-sm"
+                        >
+                          <input
+                            type="checkbox"
+                            checked={selectedColors.includes(item)}
+                            onChange={() =>
+                              toggleValue(item, selectedColors, setSelectedColors)
+                            }
+                            className="h-4 w-4"
+                          />
+                          {item}
+                        </label>
+                      ))}
+                    </div>
+                  </details>
                 </div>
 
                 <div>
@@ -1101,6 +1211,11 @@ export default function AdminProductsPage() {
     </main>
   );
 }
+
+
+
+
+
 
 
 
